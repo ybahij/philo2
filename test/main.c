@@ -6,25 +6,28 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 20:06:15 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/17 18:47:29 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/19 16:47:15 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-// void    clean_m(t_philo *p,t_data *d)
-// {
-//     int i;
+void    clean_m(t_data *d)
+{
+    // int i;
 
-//     i = -1;
-//     while (++i < p->data->philo_nbr)
-//     {
-//         safe_mutex(&p->data->forks[i].fork, "DESTROY");
-//     }
-//     safe_mutex(&p->data->w, "DESTROY");
-//     free(d->forks);
-//     free(p);
-// }
+    // i = -1;
+    // while (++i < d->philo_nbr)
+    // {
+    //     safe_mutex(&d->fork[i], "DESTROY");
+    // }
+    // safe_mutex(&d->w, "DESTROY");
+	// safe_mutex(&d->all, "DESTROY");
+    free(d->fork);
+	free(d->laste_meal);
+	free(d->thread_id);
+    free(d);
+}
 unsigned long	gettime(void)
 {
 	struct timeval	tv;
@@ -59,12 +62,14 @@ void	get_forke(t_data *data, int id)
 	pthread_mutex_lock(&data->fork[id]);
 	ft_printf("%ld: philo n[%d] take the first fork\n", id, data);
 	pthread_mutex_lock(&data->fork[(id + 1) % data->philo_nbr]);
-	pthread_mutex_lock(&data->all);
-	data->laste_meal[id] = gettime();
-	pthread_mutex_unlock(&data->all);
 	ft_printf("%ld: philo n[%d] take the scond fork\n", id, data);
 	ft_printf("%ld: the philo n:[%d] is eating\n", id, data);
+	pthread_mutex_lock(&data->m_eat);
+	data->laste_meal[id] = gettime();
+	pthread_mutex_unlock(&data->m_eat);
 	ft_sleep(data->tm_eat, data);
+	pthread_mutex_unlock(&data->fork[id]);
+	pthread_mutex_unlock(&data->fork[(id + 1) % data->philo_nbr]);	
 }
 
 void	*eat_simulation(t_data *philo)
@@ -73,17 +78,15 @@ void	*eat_simulation(t_data *philo)
 
 	pthread_mutex_lock(&philo->all);
 	id = philo->philo_id;
-	philo->laste_meal[id] = gettime();
 	pthread_mutex_unlock(&philo->all);
 	while (1)
 	{
 		get_forke(philo, id);
-		pthread_mutex_unlock(&philo->fork[id]);
-		pthread_mutex_unlock(&philo->fork[(id + 1) % philo->philo_nbr]);
-		pthread_mutex_lock(&philo->all);
+		
+		pthread_mutex_lock(&philo->t_eat);
 		philo->t_full++;
+		pthread_mutex_unlock(&philo->t_eat);
 		ft_printf("%ld: the philo n:[%d] is sleping\n", id, philo);
-		pthread_mutex_unlock(&philo->all);
 		ft_sleep(philo->tm_sleep, philo);
 		ft_printf("%ld: the philo n:[%d] is thinking\n", id, philo);
 	}
@@ -96,23 +99,31 @@ int	cheak_death(t_data *data)
 
 	while (1)
 	{
-		i = 0;
-		while (i < data->philo_nbr)
+		i = -1;
+		while (++i < data->philo_nbr)
 		{
 			pthread_mutex_lock(&data->all);
 			if (data->nbr_limit_males != -1 && (size_t)data->philo_nbr
 				* (size_t)data->nbr_limit_males <= data->t_full)
-				return (1);
+			{	
+				pthread_mutex_unlock(&data->all);
+				return (clean_m(data), 1);
+			}	
 			if (gettime() - data->laste_meal[i] >= (size_t)data->tm_die)
 			{
 				ft_printf("%ld: the philo [%d] dead\n", i, data);
-				return (1);
+				pthread_mutex_unlock(&data->all);
+				return (clean_m(data), 1);
 			}
 			pthread_mutex_unlock(&data->all);
-			i++;
 		}
 	}
 	return (1);
+}
+
+void	ft_bzero(void *s, size_t n)
+{
+	memset(s, 0, n);
 }
 
 int	main(int ac, char **av)
@@ -125,14 +136,20 @@ int	main(int ac, char **av)
 		ft_error("wrong format\n");
 	data = safe_malloc(sizeof(t_data));
 	parse_inpet(data, av);
+	data->laste_meal = safe_malloc(sizeof(long) * data->philo_nbr);
+    data->thread_id = safe_malloc(sizeof(pthread_t) * data->philo_nbr);
+    data->fork = safe_malloc (sizeof(pthread_mutex_t) * data->philo_nbr);
 	data_init(data);
 	while (++i < data->philo_nbr)
+        safe_mutex(&data->fork[i], "INIT");
+	i = -1;
+	while (++i < data->philo_nbr)
 	{
-		pthread_mutex_lock(&data->all);
 		data->philo_id = i;
-		pthread_mutex_unlock(&data->all);
+		data->laste_meal[i] = gettime();
 		pthread_create(&data->thread_id[i], NULL, (void *)eat_simulation, data);
-		usleep(60);
+		usleep(100);
 	}
-	return (cheak_death(data));
+	cheak_death(data);
+	return (0);
 }
