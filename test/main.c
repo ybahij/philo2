@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 20:06:15 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/19 22:23:14 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/23 18:49:39 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	*cheak_death(t_data *data)
 			if (data->cheak == 0)
 				break ;
 			if (data->nbr_limit_males != -1 && (size_t)data->philo_nbr
-				* (size_t)data->nbr_limit_males <= data->t_full)
+				* (size_t)data->nbr_limit_males <= (size_t)data->t_full)
 			{
 				data->end_simulation = 1;
 				return (NULL);
@@ -81,7 +81,7 @@ int	main(int ac, char **av)
 		data->philo_id = i;
 		data->laste_meal[i] = gettime();
 		pthread_create(&data->thread_id[i], NULL, (void *)eat_simulation, data);
-		usleep(200);
+		usleep(60);
 	}
 	data->cheak = 1;
 	i = -1;

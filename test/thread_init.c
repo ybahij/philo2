@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 15:17:14 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/19 22:23:58 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/20 14:03:24 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ unsigned long	gettime(void)
 	return (time);
 }
 
-void	ft_sleep(long usec, t_data *data)
+void	ft_sleep(size_t usec, t_data *data)
 {
-	time_t	t_zero;
+	size_t	t_zero;
 	size_t	timer;
 
 	if (data->end_simulation == 1)

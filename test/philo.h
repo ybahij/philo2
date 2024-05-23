@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:46:57 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/19 22:24:22 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/20 14:06:05 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,14 @@ typedef struct s_data
 
 }						t_data;
 
-//===============thread_init==============//
+void					ft_printf(char *msg, int id, t_data *data);
 void					handell_thread_error(int status, char *str);
 void					safe_thread(pthread_t *thr, void *(*handeler)(void *),
 							void *data, char *str);
-//===============data_init================//
 void					data_init(t_data *data);
 unsigned long			gettime(void);
 void					clean_m(t_data *d);
-//===============extra===================//
+void					get_forke(t_data *data, int id);
 void					ft_error(const char *str, t_data *data);
 void					ft_phtread_error(const char *str);
 char					*valid_str(char *str, t_data *data);
@@ -66,7 +65,7 @@ void					*safe_malloc(size_t size);
 int						ft_strlen(const char *str);
 int						ft_space(char c);
 unsigned long			gettime(void);
-void					ft_sleep(long usec, t_data *data);
+void					ft_sleep(size_t usec, t_data *data);
 int						ft_strcmp(const char *s1, const char *s2);
 void					handell_mutex_error(int status, char *str);
 void					safe_mutex(t_mtux *mutex, char *str);
