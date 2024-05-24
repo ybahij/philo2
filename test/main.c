@@ -6,29 +6,45 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 20:06:15 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/23 18:49:39 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/24 22:06:15 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	full_(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->philo_nbr)
+	{
+		if (data->t_full[i] != data->nbr_limit_males)
+			return (1);
+	}
+	return (0);
+}
+
 void	*eat_simulation(t_data *philo)
 {
 	int	id;
 
-	pthread_mutex_lock(&philo->all);
+	pthread_mutex_lock(&philo->id);
 	id = philo->philo_id;
-	pthread_mutex_unlock(&philo->all);
-	while (1)
+	pthread_mutex_unlock(&philo->id);
+	while (philo->end_simulation != 1)
 	{
-		if (philo->end_simulation == 1)
+		if (philo->nbr_limit_males != -1
+			&& philo->t_full[id] == philo->nbr_limit_males)
 			break ;
 		get_forke(philo, id);
 		pthread_mutex_lock(&philo->t_eat);
-		philo->t_full++;
+		philo->t_full[id]++;
 		pthread_mutex_unlock(&philo->t_eat);
+		if (philo->end_simulation == 1)
+			break ;
 		ft_printf("%ld: the philo n:[%d] is sleping\n", id, philo);
-		ft_sleep(philo->tm_sleep, philo);
+		ft_sleep(philo->tm_sleep);
 		ft_printf("%ld: the philo n:[%d] is thinking\n", id, philo);
 	}
 	return (NULL);
@@ -45,8 +61,7 @@ void	*cheak_death(t_data *data)
 		{
 			if (data->cheak == 0)
 				break ;
-			if (data->nbr_limit_males != -1 && (size_t)data->philo_nbr
-				* (size_t)data->nbr_limit_males <= (size_t)data->t_full)
+			if (data->nbr_limit_males != -1 && !full_(data))
 			{
 				data->end_simulation = 1;
 				return (NULL);
@@ -73,7 +88,6 @@ int	main(int ac, char **av)
 		ft_error("./philo [n_of_p] [t_t_d] [t_t_e] [t_t_s]\n", data);
 	parse_inpet(data, av);
 	data_init(data);
-	i = -1;
 	data->cheak = 0;
 	pthread_create(&data->cheaker, NULL, (void *)cheak_death, data);
 	while (++i < data->philo_nbr)
@@ -81,7 +95,7 @@ int	main(int ac, char **av)
 		data->philo_id = i;
 		data->laste_meal[i] = gettime();
 		pthread_create(&data->thread_id[i], NULL, (void *)eat_simulation, data);
-		usleep(60);
+		usleep(100);
 	}
 	data->cheak = 1;
 	i = -1;

@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 15:17:14 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/20 14:03:24 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/24 22:05:21 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	handell_thread_error(int status, char *str)
 		if (!ft_strcmp("creat", str))
 			ft_phtread_error("error on pthread_creat\n");
 		else if (!ft_strcmp("join", str))
-			ft_phtread_error("error on mutex_join\n");
+			ft_phtread_error("error on phtread_join\n");
 		else if (!ft_strcmp("detach", str))
-			ft_phtread_error("error on mutex_detach\n");
+			ft_phtread_error("error on phtread_detach\n");
 	}
 }
 
@@ -49,13 +49,11 @@ unsigned long	gettime(void)
 	return (time);
 }
 
-void	ft_sleep(size_t usec, t_data *data)
+void	ft_sleep(size_t usec)
 {
 	size_t	t_zero;
 	size_t	timer;
 
-	if (data->end_simulation == 1)
-		return ;
 	t_zero = gettime();
 	timer = (usec * 1000) - 5000;
 	usleep(timer);

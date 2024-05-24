@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 19:46:57 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/20 14:06:05 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/24 22:05:42 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ typedef struct s_data
 	t_mtux				m_eat;
 	t_mtux				t_eat;
 	int					cheak;
-	t_mtux				all;
+	t_mtux				id;
 	t_mtux				*fork;
 	t_mtux				first_fork;
 	t_mtux				second_fork;
-	int					t_full;
+	int					*t_full;
 	pthread_t			*thread_id;
 	pthread_t			cheaker;
 
@@ -65,12 +65,13 @@ void					*safe_malloc(size_t size);
 int						ft_strlen(const char *str);
 int						ft_space(char c);
 unsigned long			gettime(void);
-void					ft_sleep(size_t usec, t_data *data);
+void					ft_sleep(size_t usec);
 int						ft_strcmp(const char *s1, const char *s2);
 void					handell_mutex_error(int status, char *str);
 void					safe_mutex(t_mtux *mutex, char *str);
 int						if_is_digit(const char *str);
 long					ft_atol(char *s, t_data *data);
 void					parse_inpet(t_data *data, char **av);
+int						full_(t_data *data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 14:58:23 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/19 22:21:26 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/24 17:07:33 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,13 @@ void	clean_m(t_data *d)
 		safe_mutex(&d->fork[i], "DESTROY");
 	}
 	safe_mutex(&d->w, "DESTROY");
-	safe_mutex(&d->all, "DESTROY");
+	safe_mutex(&d->id, "DESTROY");
 	safe_mutex(&d->m_eat, "DESTROY");
 	safe_mutex(&d->t_eat, "DESTROY");
 	safe_mutex(&d->first_fork, "DESTROY");
 	safe_mutex(&d->second_fork, "DESTROY");
 	free(d->fork);
+	free(d->t_full);
 	free(d->laste_meal);
 	free(d->thread_id);
 	free(d);
