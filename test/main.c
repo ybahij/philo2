@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 20:06:15 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/24 22:06:15 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/25 16:41:05 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,14 @@ void	*cheak_death(t_data *data)
 	return (NULL);
 }
 
+int	parse_init(t_data *data, char **av)
+{
+	if (!parse_inpet(data, av))
+		return (0);
+	data_init(data);
+	return (1);
+}
+
 int	main(int ac, char **av)
 {
 	t_data	*data;
@@ -86,21 +94,22 @@ int	main(int ac, char **av)
 	i = -1;
 	if (ac != 5 && ac != 6)
 		ft_error("./philo [n_of_p] [t_t_d] [t_t_e] [t_t_s]\n", data);
-	parse_inpet(data, av);
-	data_init(data);
+	if (!parse_init(data, av))
+		return (1);
 	data->cheak = 0;
 	pthread_create(&data->cheaker, NULL, (void *)cheak_death, data);
 	while (++i < data->philo_nbr)
 	{
 		data->philo_id = i;
 		data->laste_meal[i] = gettime();
-		pthread_create(&data->thread_id[i], NULL, (void *)eat_simulation, data);
+		if (pthread_create(&data->thread_id[i], NULL, (void *)eat_simulation,
+				data) != 0)
+			return (clean_m(data), 1);
 		usleep(100);
 	}
 	data->cheak = 1;
 	i = -1;
 	while (++i < data->philo_nbr)
 		safe_thread(&data->thread_id[i], NULL, NULL, "join");
-	clean_m(data);
-	return (0);
+	return (clean_m(data), 0);
 }

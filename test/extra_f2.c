@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 14:58:23 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/24 17:07:33 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/25 06:22:45 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-void	ft_phtread_error(const char *str)
+int	ft_phtread_error(const char *str)
 {
 	printf("%s", str);
-	exit(EXIT_FAILURE);
+	return (0);
 }
 
-void	ft_error(const char *str, t_data *data)
+int	ft_error(const char *str, t_data *data)
 {
 	free(data);
 	printf("%s", str);
-	exit(EXIT_FAILURE);
+	return (0);
 }
 
 void	clean_m(t_data *d)

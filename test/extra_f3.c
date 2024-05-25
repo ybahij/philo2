@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 14:57:36 by ybahij            #+#    #+#             */
-/*   Updated: 2024/05/24 22:07:06 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/05/25 16:40:23 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,12 @@ long	ft_atol(char *s, t_data *data)
 
 	n = 0;
 	str = valid_str(s, data);
+	if (!str)
+		return (-2);
 	while (*str >= '0' && *str <= '9')
 		n = (n * 10) + (*str++ - '0');
 	if (n > INT_MAX)
-		ft_error("the value is to big, INTMAX is the limit\n", data);
+		return (ft_error("the value is to big, INTMAX is the limit\n", data),
+			-2);
 	return (n);
 }
