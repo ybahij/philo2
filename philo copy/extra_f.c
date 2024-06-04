@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:56:08 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/04 05:58:21 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/04 17:03:17 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	if_is_digit(const char *str)
 	return (1);
 }
 
-unsigned long	gettime(void)
+long	gettime(void)
 {
 	struct timeval	t;
 
@@ -53,13 +53,13 @@ unsigned long	gettime(void)
 
 void	ft_sleep(size_t usec, t_data *data)
 {
-	long long	t;
+	size_t	t;
 
 	t = gettime();
 	while (!data->stop)
 	{
 		if (gettime() - t >= usec)
 			break ;
-		usleep(500);
+		usleep(10);
 	}
 }

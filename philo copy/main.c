@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:57:13 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/04 06:00:46 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/04 17:07:12 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int start_simulation(t_philo *philos)
 		if (pthread_create(&(philos + i)->pth_t, NULL, &eat_, philos + i))
 			return (ft_error("Error: pthread_create", philos->data));
 		pthread_detach((philos + i)->pth_t);
-		usleep(60);
+		usleep(40);
 	}
 	if (pthread_create(&philos->data->check_monitor, NULL, &monitor, philos))
 		return (ft_error("Error: pthread_create", philos->data));
@@ -88,9 +88,12 @@ int main(int ac, char **av)
 
     if (ac < 5 || ac > 6)
         return (ft_error("Error: Wrong arguments\n", NULL));
-    if (init_philos(&philos, ac, av) == -1)
-        return (1);
-	if (start_simulation(philos) == -1)
-		return (1);
+    else
+	{
+		if (init_philos(&philos, ac, av) == -1)
+        	return (1);
+		if (start_simulation(philos) == -1)
+			return (1);
+	}
     return (0);
 }

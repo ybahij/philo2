@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:59:58 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/04 06:00:30 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/04 16:40:42 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int 	print_(char *msg, t_philo *philo)
 		return (1);
 	if (pthread_mutex_lock(&philo->data->mutex_printf))
 		return (ft_error("Error: pthread_mutex_lock", philo->data));
-	printf("%lld %d %s\n", gettime() - philo->data->t_start, philo->index, msg);
+	printf("%ld %d %s\n", gettime() - philo->data->t_start, philo->index, msg);
 	if (pthread_mutex_unlock(&philo->data->mutex_printf))
 		return (ft_error("Error: pthread_mutex_unlock", philo->data));
 	return (0);
