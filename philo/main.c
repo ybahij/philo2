@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:57:13 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/11 04:07:27 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/11 16:40:19 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,19 @@ int	cheak_(t_philo *philo)
 	return (0);
 }
 
+int	all_(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->num_philos)
+	{
+		if (data->num_eat != -1 && data->philos[i].num_eat_count < data->num_eat)
+			return (1);
+	}
+	return (0);
+}
+
 void	*monitor(void *args)
 {
 	t_philo	*philos;
@@ -79,6 +92,8 @@ void	*monitor(void *args)
 		all_eat = 0;
 		while (++i < philos->data->num_philos)
 		{
+			if (philos->data->num_eat != -1 &&  philos->num_eat_count >= philos->data->num_eat)
+				break;
 			if (cheak_(philos))
 				break ;
 			pthread_mutex_lock(&philos->data->mutex_meals);
@@ -90,16 +105,10 @@ void	*monitor(void *args)
 				break;
 			}
 			pthread_mutex_unlock(&philos->data->mutex_meals);
-			if (pthread_mutex_lock(&philos->data->s))
-        		return (ft_error("Error: pthread_mutex_lock", philos->data), NULL);
-			if (philos->data->num_eat != -1
-				&& (philos + i)->num_eat_count >= philos->data->num_eat)
-				all_eat++;
-			if (pthread_mutex_unlock(&philos->data->s))
-        		return (ft_error("Error: pthread_mutex_unlock", philos->data), NULL);
+			
 		}
-		if (all_eat == philos->data->num_philos)
-			philos->data->stop = 1;
+		if (all_(philos->data))
+			break ;
 	}
 	return (0);
 }

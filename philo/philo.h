@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:47:03 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/11 04:00:29 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/11 16:34:49 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,6 @@ void				*eat_(void *args);
 void				*monitor(void *args);
 int					start_simulation(t_philo *philos);
 int					ft_stop(t_philo *philo);
+int	all_eat(t_data *data);
 
 #endif
