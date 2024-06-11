@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:58:55 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/04 06:02:26 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/06 00:03:39 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,18 @@ long	ft_atol(char *s, t_data *data)
 {
 	const char	*str;
 	long		n;
-    int INT_MAX;
+	int			int_max;
 
-    INT_MAX = 2147483647;
+	int_max = 2147483647;
 	n = 0;
 	str = valid_str(s, data);
 	if (!str)
 		return (-2);
 	while (*str >= '0' && *str <= '9')
 		n = (n * 10) + (*str++ - '0');
-	if (n > INT_MAX)
-		return (ft_error("Error: the value is to big, INTMAX is the limit\n", data),
-			-2);
+	if (n > int_max)
+		return (ft_error("Error: the value is to big, INTMAX is the limit\n",
+				data), -2);
 	return (n);
 }
 
@@ -68,8 +68,8 @@ int	init_data(t_data **data, int argc, char **argv)
 	tmp->t_die = ft_atol(argv[2], tmp);
 	tmp->t_eat = ft_atol(argv[3], tmp);
 	tmp->t_sleep = ft_atol(argv[4], tmp);
-	if (tmp->num_philos < 1 || tmp->num_philos > 200 || tmp->t_die == -2 || \
-		tmp->t_eat == -2 || tmp->t_sleep == -2)
+	if (tmp->num_philos < 1 || tmp->num_philos > 200 || tmp->t_die == -2
+		|| tmp->t_eat == -2 || tmp->t_sleep == -2)
 		return (-1);
 	tmp->num_eat = -1;
 	if (argc == 6)
@@ -86,10 +86,9 @@ int	init_data(t_data **data, int argc, char **argv)
 
 int	init_mutex_fork(t_data *data)
 {
-	int				i;
+	int	i;
 
-	data->mutex_fork = malloc(sizeof(pthread_mutex_t) \
-					* data->num_forks);
+	data->mutex_fork = malloc(sizeof(pthread_mutex_t) * data->num_forks);
 	if (!data->mutex_fork)
 		return (ft_error("Error: Failed to malloc forks", data));
 	i = -1;

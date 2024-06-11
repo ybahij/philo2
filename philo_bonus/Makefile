@@ -5,30 +5,31 @@
 #                                                     +:+ +:+         +:+      #
 #    By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/06/04 06:03:08 by ybahij            #+#    #+#              #
-#    Updated: 2024/06/04 15:56:01 by ybahij           ###   ########.fr        #
+#    Created: 2024/06/07 17:57:50 by ybahij            #+#    #+#              #
+#    Updated: 2024/06/07 23:27:04 by ybahij           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo
+NAME = philo_bonus
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = main.c extra_f.c extra_f2.c extra_f3.c
+RM = rm -f
+SRCS = main_bonus.c extra_f1_b.c extra_f2_b.c extra_f3_b.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-%.o: %.c
+%.o:%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
 
 clean:
-	rm -f $(OBJS)
+	$(RM) $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 

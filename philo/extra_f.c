@@ -6,18 +6,17 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:56:08 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/04 17:03:17 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/10 04:10:35 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "philo.h"
 
 int	ft_error(const char *str, t_data *data)
 {
-    data = NULL;
-    if (data != NULL)
-	    free(data);
+	data = NULL;
+	if (data != NULL)
+		free(data);
 	printf("%s\n", str);
 	return (-2);
 }
@@ -56,7 +55,7 @@ void	ft_sleep(size_t usec, t_data *data)
 	size_t	t;
 
 	t = gettime();
-	while (!data->stop)
+	while (!ft_stop(data->philos))
 	{
 		if (gettime() - t >= usec)
 			break ;
