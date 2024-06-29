@@ -83,13 +83,12 @@ void	*monitor(void *args)
 {
 	t_philo	*philos;
 	int		i;
-	int		all_eat;
+	//int		all_eat;
 
 	philos = (t_philo *)args;
 	while (ft_stop(philos) == 0)
 	{
 		i = -1;
-		all_eat = 0;
 		while (++i < philos->data->num_philos)
 		{
 			if (philos->data->num_eat != -1 &&  philos->num_eat_count >= philos->data->num_eat)

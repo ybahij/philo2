@@ -12,7 +12,7 @@
 
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address  -g3
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread  -g3
 SRCS = main.c extra_f.c extra_f2.c extra_f3.c
 OBJS = $(SRCS:.c=.o)
 
