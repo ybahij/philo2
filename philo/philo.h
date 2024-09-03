@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
+/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:47:03 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/11 16:34:49 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/09/03 23:12:47 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ typedef struct s_data
 	long			c_meals;
 	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	mutex_stop;
-	pthread_mutex_t	mutex_meals;
+	pthread_mutex_t	mutex_s;
 	pthread_mutex_t	mutex_printf;
-	pthread_mutex_t	mutex_check;
+	pthread_mutex_t	*mutex_check;
 	pthread_mutex_t	s;
 	long			t_start;
-	
+
 	t_philo			*philos;
 	pthread_t		check_monitor;
 }					t_data;
@@ -74,5 +74,7 @@ void				*monitor(void *args);
 int					start_simulation(t_philo *philos);
 int					ft_stop(t_philo *philo);
 int	all_eat(t_data *data);
+void	put_stop(t_data *data);
+
 
 #endif
