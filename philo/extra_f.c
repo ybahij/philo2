@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extra_f.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
+/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:56:08 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/07 16:37:27 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/09/04 16:19:14 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ long	gettime(void)
 	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
 }
 
-void	ft_sleep(size_t usec, t_data *data)
+void	msleep(size_t usec, t_data *data)
 {
 	size_t	t;
 

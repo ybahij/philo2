@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   extra_f2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
+/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:58:55 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/06 00:03:39 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/09/04 16:57:09 by youssef          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,31 +56,27 @@ long	ft_atol(char *s, t_data *data)
 	return (n);
 }
 
-int	init_data(t_data **data, int argc, char **argv)
+int	init_data(t_data *data, int argc, char **argv)
 {
-	t_data	*tmp;
-
-	tmp = malloc(sizeof(t_data));
-	if (!tmp)
-		return (ft_error("Error: Failed to malloc data", tmp));
-	tmp->num_philos = ft_atol(argv[1], tmp);
-	tmp->num_forks = tmp->num_philos;
-	tmp->t_die = ft_atol(argv[2], tmp);
-	tmp->t_eat = ft_atol(argv[3], tmp);
-	tmp->t_sleep = ft_atol(argv[4], tmp);
-	if (tmp->num_philos < 1 || tmp->num_philos > 200 || tmp->t_die == -2
-		|| tmp->t_eat == -2 || tmp->t_sleep == -2)
+	data->num_philos = ft_atol(argv[1], data);
+	data->num_forks = data->num_philos;
+	data->t_die = ft_atol(argv[2], data);
+	data->t_eat = ft_atol(argv[3], data);
+	data->t_sleep = ft_atol(argv[4], data);
+	if (data->num_philos < 1 || data->num_philos > 200 || data->t_die == -2
+		|| data->t_eat == -2 || data->t_sleep == -2)
 		return (-1);
-	tmp->num_eat = -1;
+	data->num_eat = -1;
 	if (argc == 6)
 	{
-		tmp->num_eat = ft_atol(argv[5], tmp);
-		if (tmp->num_eat == -2)
+		data->num_eat = ft_atol(argv[5], data);
+		if (data->num_eat == -2)
 			return (-1);
 	}
-	tmp->stop = 0;
-	tmp->c_meals = 0;
-	*data = tmp;
+	data->stop = 0;
+	data->c_meals = 0;
+	data->s_over = 0;
+	pthread_mutex_init(&data->mutex_s_over, NULL);
 	return (0);
 }
 
