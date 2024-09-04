@@ -6,7 +6,7 @@
 /*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:56:08 by ybahij            #+#    #+#             */
-/*   Updated: 2024/06/10 04:10:35 by ybahij           ###   ########.fr       */
+/*   Updated: 2024/06/07 16:37:27 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_sleep(size_t usec, t_data *data)
 	size_t	t;
 
 	t = gettime();
-	while (!ft_stop(data->philos))
+	while (!data->stop)
 	{
 		if (gettime() - t >= usec)
 			break ;

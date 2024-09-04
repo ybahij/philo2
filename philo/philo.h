@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:47:03 by ybahij            #+#    #+#             */
-/*   Updated: 2024/09/03 23:12:47 by youssef          ###   ########.fr       */
+/*   Updated: 2024/06/07 16:28:57 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-typedef struct s_philo	t_philo;
 typedef struct s_data
 {
 	long			num_philos;
@@ -33,13 +32,9 @@ typedef struct s_data
 	long			c_meals;
 	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	mutex_stop;
-	pthread_mutex_t	mutex_s;
+	pthread_mutex_t	mutex_meals;
 	pthread_mutex_t	mutex_printf;
-	pthread_mutex_t	*mutex_check;
-	pthread_mutex_t	s;
 	long			t_start;
-
-	t_philo			*philos;
 	pthread_t		check_monitor;
 }					t_data;
 
@@ -72,9 +67,5 @@ int					get_fork(t_philo *philo);
 void				*eat_(void *args);
 void				*monitor(void *args);
 int					start_simulation(t_philo *philos);
-int					ft_stop(t_philo *philo);
-int	all_eat(t_data *data);
-void	put_stop(t_data *data);
-
 
 #endif

@@ -3,82 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: youssef <youssef@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ybahij <ybahij@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/04 05:57:13 by ybahij            #+#    #+#             */
-/*   Updated: 2024/09/03 23:18:02 by youssef          ###   ########.fr       */
+/*   Updated: 2024/06/09 20:41:50 by ybahij           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_usleep(long time)
-{
-	long	start;
-
-	start = gettime();
-	while (gettime() - start < time)
-		usleep(500);
-}
-
 void	*eat_(void *args)
 {
 	t_philo	*philo;
+	int		stop;
 
 	philo = (t_philo *)args;
-	while (1)
+	pthread_mutex_lock(&philo->data->mutex_stop);
+	stop = philo->data->stop;
+	pthread_mutex_unlock(&philo->data->mutex_stop);
+	philo->t_meal = gettime();
+	while (!stop)
 	{
-		if (get_fork(philo))
-			return (0);
-		if (print_("is eating", philo))
-			return (0);
-		ft_usleep(philo->data->t_eat * 1000);
-		if (print_("is sleeping", philo))
-			return (0);
-		ft_usleep(philo->data->t_sleep * 1000);
-		if (print_("is thinking", philo))
-			return (0);
-	}
-	return (0);
-}
-
-int	t_daeth(t_philo *philo)
-{
-	pthread_mutex_lock(&philo->data->mutex_check[philo->index - 1]);
-	if (gettime() - philo->t_meal > philo->data->t_die)
-	{
-		print_("died", philo);
-		put_stop(philo->data);
-		pthread_mutex_unlock(&philo->data->mutex_check[philo->index - 1]);
-		return (1);
-	}
-	pthread_mutex_unlock(&philo->data->mutex_check[philo->index - 1]);
-	return (0);
-}
-
-// int	cheak_(t_philo *philo)
-// {
-// 	if (pthread_mutex_lock(philo->data->mutex_check[philo->index - 1]))
-// 		return (ft_error("Error: pthread_mutex_lock", philo->data), 1);
-// 	if (philo->data->s_cheak != 1)
-// 	{
-// 		pthread_mutex_unlock(&philo->data->mutex_check);
-// 		return (1);
-// 	}
-// 	if (pthread_mutex_unlock(&philo->data->mutex_check))
-// 		return (ft_error("Error: pthread_mutex_unlock", philo->data), 1);
-// 	return (0);
-// }
-
-int	all_(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < data->num_philos)
-	{
-		if (data->num_eat != -1 && data->philos[i].num_eat_count < data->num_eat)
-			return (1);
+		if (get_fork(philo) == -1)
+			break ;
+		print_("is sleeping", philo);
+		ft_sleep(philo->data->t_sleep, philo->data);
+		pthread_mutex_lock(&philo->data->mutex_stop);
+		stop = philo->data->stop;
+		pthread_mutex_unlock(&philo->data->mutex_stop);
 	}
 	return (0);
 }
@@ -87,40 +39,29 @@ void	*monitor(void *args)
 {
 	t_philo	*philos;
 	int		i;
+	int		all_eat;
 
 	philos = (t_philo *)args;
-	while (1)
+	while (!philos->data->stop)
 	{
 		i = -1;
+		all_eat = 0;
 		while (++i < philos->data->num_philos)
 		{
-			if (t_daeth(&philos[i]))
-				return (0);
-			// if (cheak_(&philos[i]))
-			// 	return (0);
-			if (all_(philos[i].data))
-				return (0);
+			if (gettime() - (philos + i)->t_meal > philos->data->t_die)
+			{
+				print_("died", philos + i);
+				philos->data->stop = 1;
+				break ;
+			}
+			if (philos->data->num_eat != -1
+				&& (philos + i)->num_eat_count >= philos->data->num_eat)
+				all_eat++;
 		}
+		if (all_eat == philos->data->num_philos)
+			philos->data->stop = 1;
 	}
 	return (0);
-}
-
-void	philo_exit(t_philo *philos)
-{
-	int	i;
-
-	i = -1;
-	while (++i < philos->data->num_philos)
-	{
-		pthread_mutex_destroy(philos->data->mutex_fork + i);
-		pthread_mutex_destroy(philos->data->mutex_check + i);
-	}
-	pthread_mutex_destroy(&philos->data->mutex_stop);
-	pthread_mutex_destroy(&philos->data->mutex_printf);
-	free(philos->data->mutex_fork);
-	free(philos->data->mutex_check);
-	free(philos->data);
-	free(philos);
 }
 
 int	start_simulation(t_philo *philos)
@@ -131,17 +72,19 @@ int	start_simulation(t_philo *philos)
 	philos->data->t_start = gettime();
 	while (++i < philos->data->num_philos)
 	{
-		if (pthread_create(&philos[i].pth_t, NULL, eat_, &philos[i]))
-			return (ft_error("Error: pthread_create", philos[i].data));
+		if (pthread_create(&(philos + i)->pth_t, NULL, &eat_, philos + i))
+			return (ft_error("Error: pthread_create", philos->data));
+		pthread_detach((philos + i)->pth_t);
+		usleep(100);
 	}
-	monitor(philos);
+	if (pthread_create(&philos->data->check_monitor, NULL, &monitor, philos))
+		return (ft_error("Error: pthread_create", philos->data));
+	pthread_join(philos->data->check_monitor, NULL);
 	i = -1;
-	while (++i < philos->data->num_philos)
-	{
-		if (pthread_join(philos[i].pth_t, NULL))
-			return (ft_error("Error: pthread_join", philos[i].data));
-	}
-	philo_exit(philos);
+	while (++i < philos->data->num_forks)
+		pthread_mutex_destroy(&philos->data->mutex_fork[i]);
+	pthread_mutex_destroy(&philos->data->mutex_printf);
+	pthread_mutex_destroy(&philos->data->mutex_meals);
 	return (0);
 }
 
