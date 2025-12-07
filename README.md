@@ -112,6 +112,6 @@ Execute the program with 4 or 5 arguments:
 
 # Example 2: 4 philosophers, fixed meal count (5 meals each)
 ./philo 4 410 200 200 5
-
+```
 🤝 Authors
   Youssef Bahij
